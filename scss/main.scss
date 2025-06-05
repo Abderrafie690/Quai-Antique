@@ -1,2 +1,114 @@
-@import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
-@import 'custom';
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.hero-scene {
+  position: relative;
+  height: 60vh;
+  margin-bottom: 15px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(/images/FondHeroScene.jpg);
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3);
+    z-index: 0;
+  }
+
+  .hero-scene-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    padding: 1rem;
+  }
+}
+.image-card {
+  position: relative;
+
+  img {
+    transition: all 0.3s;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .titre-image,
+  .action-image-buttons {
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .titre-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+  }
+
+  .action-image-buttons{
+
+        position : absolute;
+
+        top: 0;
+
+        left: 0;
+
+        width: 100%;
+
+        padding: 5px;
+
+        display: flex;
+
+        justify-content: space-between;
+
+
+        opacity: 0;
+
+        transition: all 0.3s;
+  }
+
+  &:hover {
+    img {
+      filter: brightness(0.3);
+    }
+
+    .titre-image,
+    .action-image-buttons {
+      opacity: 1;
+    }
+  }
+}
+
+
+    .titre-image{
+        position: absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: all 0.3s;
+    }
+    
+
+
+    .form-label{
+      color: $primary;
+    }
+  main{
+    margin-bottom: 270 px;
+  }
+
+
