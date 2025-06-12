@@ -11939,4 +11939,10 @@ main {
   margin-bottom: 270 px;
 }
 
+.allreservations a {
+  display: block;
+  color: #000;
+  padding: 10px;
+}
+
 /*# sourceMappingURL=main.css.map */
