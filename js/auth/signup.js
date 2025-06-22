@@ -97,7 +97,8 @@ const requestOptions = {
   redirect: 'follow'
 };
 
-fetch("http://localhost:8000/api/registration", requestOptions)
+fetch("https://quaiantiqueback.alwaysdata.net/api/registration", requestOptions)
+
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));

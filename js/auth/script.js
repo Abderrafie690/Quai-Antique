@@ -1,20 +1,30 @@
 const tokenCookieName = "accesstoken";
 const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
+const apiUrl = "https://quaiantiquefront.alwaysdata.net/api/";
+
+
+
+//Event listener pour déco//
 
 signoutBtn.addEventListener("click", signout);
+
+
+
+//GESTION DES ROLES//
 
 function getRole(){
     return getCookie(RoleCookieName);
 }
 
+//GESTION DE LA DECONNEXION//
 function signout(){
     eraseCookie(tokenCookieName);
-    eraseCookie("role");
+    eraseCookie(RoleCookieName)
     window.location.reload();
 }
 
-
+//GESTION DU TOKEN//
 function setToken(token){
     setCookie(tokenCookieName, token, 7);
 }
@@ -23,11 +33,12 @@ function getToken(){
     return getCookie(tokenCookieName);
 }
 
+//GESTION DES COOKIES//
 
 function setCookie(name,value,days) {
-    var expires = "";
+    let expires = "";
     if (days) {
-        var date = new Date();
+        let date = new Date();
         date.setTime(date.getTime() + (days*24*60*60*1000));
         expires = "; expires=" + date.toUTCString();
     }
@@ -35,12 +46,12 @@ function setCookie(name,value,days) {
 }
 
 function getCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(const element of ca) {
+        let c = element;
+        while (c.startsWith(' ')) c = c.substring(1,c.length);
+        if (c.startsWith(nameEQ)) return c.substring(nameEQ.length,c.length);
     }
     return null;
 }
@@ -48,16 +59,19 @@ function getCookie(name) {
 function eraseCookie(name) {   
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+
+
+//VERIFICATION DE LA CONNEXION//
+
 function isConnected(){
-    if(getToken() == null || getToken == undefined){
-        return false;
-    }
-    else{
-        return true;
-    }
+    return !(getToken() == null || getToken == undefined);
 }
 
-function showAndHideElementsForRoles(){
+
+//GESTION DES ROLES//
+
+
+function showAndHideElementsForRoles (){
     const userConnected = isConnected();
     const role = getRole();
 
@@ -65,26 +79,63 @@ function showAndHideElementsForRoles(){
 
     allElementsToEdit.forEach(element =>{
         switch(element.dataset.show){
-            case 'disconnected': 
+            case 'disconnected':
                 if(userConnected){
                     element.classList.add("d-none");
                 }
                 break;
-            case 'connected': 
+            case 'connected':
                 if(!userConnected){
                     element.classList.add("d-none");
                 }
                 break;
-            case 'admin': 
-                if(!userConnected || role != "admin"){
+            case 'admin':
+                if(!userConnected || role != "ROLE_ADMIN" ){
                     element.classList.add("d-none");
                 }
                 break;
-            case 'client': 
-                if(!userConnected || role != "client"){
+            case 'client':
+                if(!userConnected || role != "ROLE_CLIENT"){
                     element.classList.add("d-none");
                 }
                 break;
         }
     })
 }
+
+function sanitizeHtml(text){
+    const tempHtml = document.createElement('div');
+    tempHtml.textContent = text;
+    return tempHtml.innerHTML;
+}
+
+function getInfosUser(){
+    console.log("Recuperaction des infos de utilizateurs...");
+
+    let myHeaders = new Headers();
+    myHeaders.append("X-AUTH-TOKEN", getToken());
+
+    let requestOptions = {
+        method: "GET",
+        headers: myHeaders,
+        redirect: "follow"
+    };
+
+    fetch(apiUrl+"account/me", requestOptions)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            } else {
+                console.log("Impossible de récupérer les informations utilisateur");
+                throw new Error("Utilisateur non connecté");
+            }
+        })
+        .then(result => {
+            console.log("Utilisateur:", result);
+            return result;
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération des données utilisateur", error);
+        });
+}
+
