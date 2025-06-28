@@ -1,4 +1,3 @@
-
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 .hero-scene {
@@ -33,6 +32,7 @@
     padding: 1rem;
   }
 }
+
 .image-card {
   position: relative;
 
@@ -41,12 +41,15 @@
     width: 100%;
     height: 250px;
     object-fit: cover;
+    position: relative;
+    z-index: 1;
   }
 
   .titre-image,
   .action-image-buttons {
     opacity: 0;
     transition: all 0.3s;
+    pointer-events: none;
   }
 
   .titre-image {
@@ -56,28 +59,19 @@
     transform: translate(-50%, -50%);
     color: white;
     font-weight: bold;
+    z-index: 2;
   }
 
-  .action-image-buttons{
-
-        position : absolute;
-
-        top: 0;
-
-        left: 0;
-
-        width: 100%;
-
-        padding: 5px;
-
-        display: flex;
-
-        justify-content: space-between;
-
-
-        opacity: 0;
-
-        transition: all 0.3s;
+  .action-image-buttons {
+    
+    position: absolute;
+    top: 0 ;
+    left: 0 ;
+    width: 100% ;
+    padding: 5px ;
+    display: flex !important;
+    justify-content: space-between ;
+    z-index: 3;
   }
 
   &:hover {
@@ -88,33 +82,32 @@
     .titre-image,
     .action-image-buttons {
       opacity: 1;
+      pointer-events: auto;
     }
   }
 }
 
-
-    .titre-image{
-        position: absolute;
-        top:50%;
-        left:50%;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        transition: all 0.3s;
-    }
-    
-
-
-    .form-label{
-      color: $primary;
-    }
-  main{
-    margin-bottom: 270 px;
-  }
-.allreservations{
-    a{
-        display: block;
-        color: $black;
-        padding:10px;
-    }
+.titre-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.3s;
 }
 
+.form-label {
+  color: $primary;
+}
+
+main {
+  margin-bottom: 270px; // ⚠️ corregido: antes tenías "270 px" con espacio
+}
+
+.allreservations {
+  a {
+    display: block;
+    color: $black;
+    padding: 10px;
+  }
+}

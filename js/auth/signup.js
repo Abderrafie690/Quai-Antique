@@ -1,44 +1,40 @@
-//Implémenter le JS de ma page
+//implémenter le JS de ma page//
 
 const inputNom = document.getElementById("NomInput");
-const inputPreNom = document.getElementById("PrenomInput");
-const inputMail = document.getElementById("EmailInput");
+const inputPrenom = document.getElementById("PrenomInput");
+const inputEmail = document.getElementById("EmailInput");
 const inputPassword = document.getElementById("PasswordInput");
-const inputValidationPassword = document.getElementById("ValidatePasswordInput");
+const inputValidatePassword = document.getElementById("ValidatePasswordInput");
 const btnValidation = document.getElementById("btn-validation-inscription");
 const formInscription = document.getElementById("formulaireInscription");
 
+inputNom.addEventListener("keyup", valdidateForm);
+inputPrenom.addEventListener("keyup", valdidateForm);
+inputEmail.addEventListener("keyup", valdidateForm);
+inputPassword.addEventListener("keyup", valdidateForm);
+inputValidatePassword.addEventListener("keyup", valdidateForm);
+btnValidation.addEventListener("click", inscrireUtilisateur);
 
-inputNom.addEventListener("keyup", validateForm); 
-inputPreNom.addEventListener("keyup", validateForm);
-inputMail.addEventListener("keyup", validateForm);
-inputPassword.addEventListener("keyup", validateForm);
-inputValidationPassword.addEventListener("keyup", validateForm);
+function valdidateForm(){
+    const nomOk = validateRequired(inputNom);
+    const prenomOk = validateRequired(inputPrenom);
+    const emailOk = validateMail(inputEmail);
+    const passwordOk = validatePassword(inputPassword);
+    const confirmPasswordOk = validateConfirmationPassword(inputPassword, inputValidatePassword);
 
-
-btnValidation.addEventListener("click", InscrireUtilisateur);
-
-
-//Function permettant de valider tout le formulaire
-function validateForm(){
-    const nomOK = validateRequired(inputNom);
-    const prenomOK = validateRequired(inputPreNom);
-    const mailOK = validateMail(inputMail);
-    const passwordOK = validatePassword( inputPassword);
-    const passwordConfirmOK = validateConfirmationPassword( inputPassword, inputValidationPassword);
-
-    if(nomOK && prenomOK && mailOK && passwordOK && passwordConfirmOK){
-        btnValidation.disabled = false;
-
+    if(nomOk && prenomOk && emailOk && passwordOk && confirmPasswordOk){
+        btnValidation.disabled=false;
     }
     else{
-        btnValidation.disabled = true;
+        btnValidation.disabled=true;
     }
 }
+
+//VERIFICATION DU MAIL AVEC LE REGEX JS//
 function validateMail(input){
     //Définir mon regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const mailUser = input.value;
+    const mailUser = inputEmail.value;
     if(mailUser.match(emailRegex)){
         input.classList.add("is-valid");
         input.classList.remove("is-invalid"); 
@@ -50,22 +46,12 @@ function validateMail(input){
         return false;
     }
 }
-function validateConfirmationPassword(inputPwd, inputConfirmPwd){
-    if(inputPwd.value == inputConfirmPwd.value){
-        inputConfirmPwd.classList.add("is-valid");
-        inputConfirmPwd.classList.remove("is-invalid");
-        return true;
-    }
-    else{
-        inputConfirmPwd.classList.add("is-invalid");
-        inputConfirmPwd.classList.remove("is-valid");
-        return false;
-    }
-}
+
+//VERIFICATION DU PASSWORD AVEC LE REGEX JS//
 function validatePassword(input){
     //Définir mon regex
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
-    const passwordUser = input.value;
+    const passwordUser = inputPassword.value;
     if(passwordUser.match(passwordRegex)){
         input.classList.add("is-valid");
         input.classList.remove("is-invalid"); 
@@ -78,27 +64,71 @@ function validatePassword(input){
     }
 }
 
+//VERIFICATION DE LA CONFIRMATION DU PASSWORD//
+function validateConfirmationPassword(inputPassword, inputValidatePassword){
+    if(inputPassword.value == inputValidatePassword.value){
+        inputValidatePassword.classList.add("is-valid");
+        inputValidatePassword.classList.remove("is-invalid");
+        return true;
+    }
+    else{
+        inputValidatePassword.classList.add("is-invalid");
+        inputValidatePassword.classList.remove("is-valid");
+        return false;
+    }
+}
+
 function validateRequired(input){
+    if(input.value != ''){
+        input.classList.add("is-valid");
+        input.classList.remove("is-invalid");
+        return true;
+    }
+    else{
+        input.classList.remove("is-valid");
+        input.classList.add("is-invalid");
+        return false;
+    }
+}
 
-const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
 
-const raw = JSON.stringify({
-  "firstName": "tyty",
-  "lastName": "tyty",
-  "email": "tytyquaiAntique@mail.com",
-  "password": "Azerty11"
+/*GESTION DU FORMULAIRE D'INSCRIPTION ET MISE EN RELATIONA AVEC L'API*/
+function inscrireUtilisateur(){
+
+    let dataForm = new FormData(formInscription);
+
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let raw = JSON.stringify({
+        "firstName": dataForm.get("Nom"),
+        "lastName": dataForm.get("Prenom"),
+        "email": dataForm.get("Email"),
+        "password": dataForm.get("Mdp")
+    });
+
+    let requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+
+    fetch(apiUrl+"registration", requestOptions)
+    .then(response => {
+    if (!response.ok) {
+        throw new Error("Erreur lors de l'inscription");
+    }
+    return response.json();
+})
+
+    .then(result => {
+        alert("Bravo "+dataForm.get("Prenom")+", vous êtes maintenant inscrit, vous pouvez vous connecter.");
+        document.location.href="/signin";
+    })
+.catch(error => {
+    console.error('Erreur d’inscription', error);
+    alert("Erreur: " + error.message);
 });
-
-const requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
-
-fetch("http://localhost:8000/api/registration", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
 }
