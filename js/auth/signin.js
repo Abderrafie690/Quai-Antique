@@ -22,7 +22,7 @@ function checkCredentials(){
         redirect: "follow"
     };
 
-    fetch(apiUrl+"login", requestOptions)
+    fetch("https://127.0.0.1:8000/api/login", requestOptions)
     .then(response => {
         if (response.ok){
             return response.json();
