@@ -9,6 +9,7 @@ const apiUrl = "http://127.0.0.1:8000/api/";
 //Event listener pour déco//
 
 signoutBtn.addEventListener("click", signout);
+getInfosUser();
 
 //GESTION DES ROLES//
 
@@ -106,4 +107,31 @@ function sanitizeHtml(text){
     const tempHtml = document.createElement('div');
     tempHtml.textContent = text;
     return tempHtml.innerHTML;
+}
+
+function getInfosUser(){
+    let myHeaders = new Headers();
+    myHeaders.append("X-AUTH-TOKEN", getToken());
+
+    let requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+    };
+
+    fetch(apiUrl+"account/me", requestOptions)
+    .then(response =>{
+        if(response.ok){
+            return response.json();
+        }
+        else{
+            console.log("Impossible de récupérer les informations utilisateur");
+        }
+    })
+    .then(result => {
+        return result;
+    })
+    .catch(error =>{
+        console.error("erreur lors de la récupération des données utilisateur", error);
+    });
 }
