@@ -1,7 +1,7 @@
 const tokenCookieName = "accesstoken";
 const RoleCookieName = "role";
 const signoutBtn = document.getElementById("signout-btn");
-const apiUrl = "https://127.0.0.1:8000/api/";
+const apiUrl = "http://127.0.0.1:8000/api/";
 
 
 

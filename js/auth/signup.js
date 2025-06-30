@@ -115,7 +115,7 @@ function inscrireUtilisateur(){
     };
 
 
-    fetch(apiUrl+"registration", requestOptions)
+    fetch("http://127.0.0.1:8000/api/registration", requestOptions)
     .then(response => {
     if (!response.ok) {
         throw new Error("Erreur lors de l'inscription");
@@ -132,7 +132,3 @@ function inscrireUtilisateur(){
     alert("Erreur: " + error.message);
 });
 }
-fetch("https://127.0.0.1:8000/api/registration", requestOptions)
-.then(response => response.json())
-.then(result => console.log(result))
-.catch(error => console.log('error', error));
